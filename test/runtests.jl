@@ -2,6 +2,7 @@ using GenericNauty
 using Test
 using Aqua
 using JET
+using Documenter
 
 @testset "GenericNauty.jl" begin
     @testset "Code quality (Aqua.jl)" begin
@@ -11,4 +12,11 @@ using JET
         JET.test_package(GenericNauty; target_defined_modules=true)
     end
     # Write your tests here.
+    @testset "Label" begin
+        include("labelTests.jl")
+    end
+
+    @testset "Doctests" begin
+        @test doctest(GenericNauty)
+    end
 end

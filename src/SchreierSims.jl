@@ -3,10 +3,7 @@
 # using AbstractAlgebra
 import Base.in
 
-struct TrivialGroup
-    # order::Vector{Int}
-    # TrivialGroup() = new(Int[])
-end
+struct TrivialGroup end
 
 mutable struct Group
     n::Int
