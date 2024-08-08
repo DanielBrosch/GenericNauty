@@ -1,5 +1,7 @@
 include("SchreierSims.jl")
 
+using GenericNauty.Models
+
 using DataStructures: SortedDict
 export distinguish
 
@@ -11,13 +13,6 @@ export distinguish
 # function individualize!(coloring::Vector{Int}, v::Int)::Vector{Int}
 #     return coloring
 # end
-
-vertexColor(F, v)::Int = 1
-distinguish(F, v::Int, W::BitVector)::UInt = 0
-function permute(F::T, p)::T where {T}
-    @error "Mising"
-    return F
-end
 
 function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
     n::Int = size(F)
