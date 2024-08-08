@@ -51,7 +51,7 @@ import Base.getproperty
     f == :SV && return Int[]
     f == :b && return 1
     f == :n && return 1
-    error("Type TrivialGroup does has no field $f")
+    return error("Type TrivialGroup does has no field $f")
 end
 
 # getproperty(::TrivialGroup, :order) = 1

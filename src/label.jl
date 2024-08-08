@@ -1,6 +1,6 @@
 include("SchreierSims.jl")
 
-using DataStructures:SortedDict
+using DataStructures: SortedDict
 export distinguish
 
 # function refine!(F::T, coloring::Vector{Int}, alpha)::Vector{UInt} where {T<:Flag}
@@ -16,7 +16,7 @@ vertexColor(F, v)::Int = 1
 distinguish(F, v::Int, W::BitVector)::UInt = 0
 function permute(F::T, p)::T where {T}
     @error "Mising"
-    F
+    return F
 end
 
 function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
@@ -60,7 +60,7 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
         while cell <= maximum(coloring)
             vertDistinguish .= 0
             # curCell .= coloring .== cell
-            for i = 1:n
+            for i in 1:n
                 @inbounds curCell[i] = coloring[i] == cell
             end
 
@@ -68,10 +68,10 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
 
             for v in 1:length(curCell)
                 if !curCell[v]
-                    continue 
+                    continue
                 end
-                
-            # for v in findall(curCell)#findall(x->x==cell, coloring)
+
+                # for v in findall(curCell)#findall(x->x==cell, coloring)
                 d::UInt = distinguish(F, v, WCellInd)
                 vertDistinguish[v] = d
                 # union!(newCells, [d])
@@ -92,12 +92,12 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
             end
 
             # coloring[coloring .> cell] .+= numNewCells
-            for i in length(alpha):-1:(cell+numNewCells+1)
-                alpha[i] = alpha[i-numNewCells]
+            for i in length(alpha):-1:(cell + numNewCells + 1)
+                alpha[i] = alpha[i - numNewCells]
             end
             # @views alpha[(cell + numNewCells + 1):end] .= alpha[(cell + 1):(end - numNewCells)]
 
-            alpha[(cell+1):(cell+numNewCells)] .= true
+            alpha[(cell + 1):(cell + numNewCells)] .= true
 
             # newCellsCol::Vector{Pair{UInt,Int}} = collect(newCells)
             # sort!(newCellsCol; by=x -> x[1])
@@ -111,7 +111,7 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
 
                 d::UInt = vertDistinguish[v]
                 firstPos::Int = 0
-                for (i,(k,_)) in enumerate(newCells)
+                for (i, (k, _)) in enumerate(newCells)
                     if k == d
                         firstPos = i
                         break
@@ -139,7 +139,7 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
                 end
 
                 # Remove biggest new cell
-                alpha[maxCellInd+cell-1] = false
+                alpha[maxCellInd + cell - 1] = false
             end
 
             cell += length(newCells)
@@ -161,7 +161,20 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
     # return nodeInv
 end
 
-function investigateNode(F, coloring::Vector{Int}, nodeInv::Vector{UInt}, n, nInv1, nInvStar, autG, v1, vStar, curBranch, covered::Vector{Vector{Int}}, prune)::Int
+function investigateNode(
+    F,
+    coloring::Vector{Int},
+    nodeInv::Vector{UInt},
+    n,
+    nInv1,
+    nInvStar,
+    autG,
+    v1,
+    vStar,
+    curBranch,
+    covered::Vector{Vector{Int}},
+    prune,
+)::Int
     # @info "investigate node at $coloring, $nodeInv"
 
     first = length(nInv1) == 0
@@ -186,7 +199,7 @@ function investigateNode(F, coloring::Vector{Int}, nodeInv::Vector{UInt}, n, nIn
                 # @info "Added onto stabilizer, new order is $(order(autG))"
                 stabilizer!(autG, curBranch)
                 for i in 1:length(curBranch)
-                    H = stabilizer!(autG, curBranch[1:(i-1)])
+                    H = stabilizer!(autG, curBranch[1:(i - 1)])
 
                     @assert H !== nothing
 
@@ -247,15 +260,15 @@ function investigateNode(F, coloring::Vector{Int}, nodeInv::Vector{UInt}, n, nIn
         #         length(nodeInv) <= length(nInv1)
 
         @views if prune &&
-                  !first &&
-                  !(
-                      nodeInv[1:min(length(nodeInv), length(nInv1))] ==
-                      nInv1[1:min(length(nodeInv), length(nInv1))]
-                  ) &&
-                  !(
-                      nodeInv[1:min(length(nodeInv), length(nInvStar))] >=
-                      nInvStar[1:min(length(nodeInv), length(nInvStar))]
-                  )
+            !first &&
+            !(
+                nodeInv[1:min(length(nodeInv), length(nInv1))] ==
+                nInv1[1:min(length(nodeInv), length(nInv1))]
+            ) &&
+            !(
+                nodeInv[1:min(length(nodeInv), length(nInvStar))] >=
+                nInvStar[1:min(length(nodeInv), length(nInvStar))]
+            )
             return 0
         end
         firstBigCell = Int[]
@@ -277,7 +290,20 @@ function investigateNode(F, coloring::Vector{Int}, nodeInv::Vector{UInt}, n, nIn
             newNodeInv::Vector{UInt} = refine!(newC, F, i)
             push!(curBranch, i)
             catNodeInv::Vector{UInt} = vcat(nodeInv, newNodeInv)
-            t = investigateNode(F, newC, catNodeInv, n, nInv1, nInvStar, autG, v1, vStar, curBranch, covered, prune)
+            t = investigateNode(
+                F,
+                newC,
+                catNodeInv,
+                n,
+                nInv1,
+                nInvStar,
+                autG,
+                v1,
+                vStar,
+                curBranch,
+                covered,
+                prune,
+            )
 
             if t > 0
                 return t - 1
@@ -358,7 +384,9 @@ function label(F::T; prune=true, removeIsolated=false) where {T}
     # alpha[1] = true
     refine!(col, F, 0)
 
-    investigateNode(F, col, UInt[], n, nInv1, nInvStar, autG, v1, vStar, curBranch, covered, prune)
+    investigateNode(
+        F, col, UInt[], n, nInv1, nInvStar, autG, v1, vStar, curBranch, covered, prune
+    )
 
     p = zeros(Int, n)
     p[vStar] .= 1:n
