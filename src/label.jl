@@ -54,10 +54,7 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
         newCells = SortedDict{UInt,Int}()
         while cell <= maximum(coloring)
             vertDistinguish .= 0
-            # curCell .= coloring .== cell
-            for i in 1:n
-                @inbounds curCell[i] = coloring[i] == cell
-            end
+            curCell .= coloring .== cell
 
             empty!(newCells)
 

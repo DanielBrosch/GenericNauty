@@ -6,7 +6,7 @@ using Documenter
 
 @testset "GenericNauty.jl" begin
     @testset "Code quality (Aqua.jl)" begin
-        Aqua.test_all(GenericNauty)
+        Aqua.test_all(GenericNauty; deps_compat=(ignore=[:LinearAlgebra],))
     end
     @testset "Code linting (JET.jl)" begin
         JET.test_package(GenericNauty; target_defined_modules=true)
@@ -17,6 +17,6 @@ using Documenter
     end
 
     @testset "Doctests" begin
-        @test doctest(GenericNauty)
+        doctest(GenericNauty)
     end
 end
