@@ -51,7 +51,7 @@ import Base.getproperty
     f == :SV && return Int[]
     f == :b && return 1
     f == :n && return 1
-    return Core.getfield(G, f)
+    error("Type TrivialGroup does has no field $f")
 end
 
 # getproperty(::TrivialGroup, :order) = 1
@@ -213,10 +213,7 @@ function schreier_sims!(G::Union{Group,TrivialGroup})
     end
 end
 
-function sift(G::Union{Group,TrivialGroup}, p::Vector{Int})
-    if G isa TrivialGroup
-        return p
-    end
+function sift(G::Group, p::Vector{Int})
     if length(G.gen) == 0 || issorted(p)# == 1:length(p)
         return p
     end
@@ -234,10 +231,14 @@ function sift(G::Union{Group,TrivialGroup}, p::Vector{Int})
     return p
 end
 
+function sift(G::TrivialGroup, p::Vector{Int})
+    return p
+end
+
 # sift(::Nothing, p::Vector{Int}) = p
 
 # adds p to G, returns true if changed
-function addGen!(G::Union{Group,TrivialGroup}, p::Vector{Int})
+function addGen!(G::Group, p::Vector{Int})
     if G isa TrivialGroup
         return false
     end
@@ -259,11 +260,17 @@ function addGen!(G::Union{Group,TrivialGroup}, p::Vector{Int})
     return false
 end
 
+# adds p to G, returns true if changed
+function addGen!(G::TrivialGroup, p::Vector{Int})
+    return false
+end
+
 function SGS(G::Group)
-    if G.subGroup isa TrivialGroup
-        return G.gen
-    end
     return union(G.gen, SGS(G.subGroup))
+end
+
+function SGS(G::TrivialGroup)
+    return G.gen
 end
 
 function Basis(G::Group)
@@ -273,11 +280,19 @@ function Basis(G::Group)
     return vcat([G.b], Basis(G.subGroup))
 end
 
+function Basis(G::TrivialGroup)
+    return [G.b]
+end
+
 function order(G::Group)
     if G.b == -1
         return 1
     end
     return length(G.O) * order(G.subGroup)
+end
+
+function order(::TrivialGroup)
+    return 1
 end
 
 function Base.in(p::Vector{Int}, G::Group)
@@ -299,7 +314,7 @@ function stabilizer(G::Group, S::Vector{Int})
 end
 
 # returns same group as stabilizer(G, S), but modifies stabilizer chain of G in the process
-function stabilizer!(G::Union{Group,TrivialGroup}, S::Vector{Int}, keepOrder=false)
+function stabilizer!(G::Group, S::Vector{Int}, keepOrder=false)
     if G isa TrivialGroup
         return G
     end
@@ -332,10 +347,11 @@ function stabilizer!(G::Union{Group,TrivialGroup}, S::Vector{Int}, keepOrder=fal
     end
 end
 
-function permute!(gr::Union{Group,TrivialGroup}, per::Vector{Int})
-    if gr isa TrivialGroup
-        return gr
-    end
+function stabilizer!(G::TrivialGroup, S::Vector{Int}, keepOrder=false)
+    return G
+end
+
+function permute!(gr::Group, per::Vector{Int})
     if length(gr.gen) == 0
         return gr
     end
@@ -360,5 +376,8 @@ function permute!(gr::Union{Group,TrivialGroup}, per::Vector{Int})
     if length(gr.subGroup.gen) > 0
         permute!(gr.subGroup, per)
     end
+    return gr
+end
+function permute!(gr::TrivialGroup, per::Vector{Int})
     return gr
 end
