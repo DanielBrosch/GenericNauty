@@ -318,7 +318,7 @@ end
 
 # Custom implementation of nauty, but still sloooow
 # Allows us to label near-arbitrary combinatoric objects
-function label(F::T; prune=true, removeIsolated=false) where {T <: Model}
+function label(F::T; prune=true, removeIsolated=false) where {T<:Model}
     # @show F 
     # display(F)
     # @show isolatedVertices(F)
