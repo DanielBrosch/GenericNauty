@@ -14,7 +14,7 @@ export distinguish
 #     return coloring
 # end
 
-function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
+function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T<:Model}
     n::Int = size(F)
     alpha = BitVector(undef, n)
     vertDistinguish = zeros(UInt, n)
@@ -154,7 +154,7 @@ function refine!(coloring::Vector{Int}, F::T, v::Int)::Vector{UInt} where {T}
 end
 
 function investigateNode(
-    F,
+    F::T,
     coloring::Vector{Int},
     nodeInv::Vector{UInt},
     n,
@@ -166,7 +166,7 @@ function investigateNode(
     curBranch,
     covered::Vector{Vector{Int}},
     prune,
-)::Int
+)::Int where {T<:Model}
     # @info "investigate node at $coloring, $nodeInv"
 
     first = length(nInv1) == 0
@@ -318,7 +318,7 @@ end
 
 # Custom implementation of nauty, but still sloooow
 # Allows us to label near-arbitrary combinatoric objects
-function label(F::T; prune=true, removeIsolated=false) where {T}
+function label(F::T; prune=true, removeIsolated=false) where {T <: Model}
     # @show F 
     # display(F)
     # @show isolatedVertices(F)

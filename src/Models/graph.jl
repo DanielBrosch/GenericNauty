@@ -1,6 +1,6 @@
 using LinearAlgebra
 
-struct Graph
+struct Graph <: Model
     A::Symmetric{Bool,BitMatrix}
 
     Graph(A::Matrix{Bool}) = new(Symmetric(BitMatrix(A)))

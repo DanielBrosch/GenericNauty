@@ -8,6 +8,7 @@ function permute(F::T, p)::T where {T}
     return F
 end
 
+include("model.jl")
 include("graph.jl")
 
 end
