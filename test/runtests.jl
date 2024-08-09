@@ -14,6 +14,7 @@ using Documenter
     # Write your tests here.
     @testset "Label" begin
         include("labelTests.jl")
+        include("labelRandom.jl")
     end
 
     @testset "Doctests" begin
