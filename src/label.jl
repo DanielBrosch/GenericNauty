@@ -200,8 +200,8 @@ function investigateNode(
                     if prune && curBranch[i] in o
                         # cut this branch multiple levels up
                         difLevel = length(curBranch) - i
-                        curBranch = curBranch[1:i]
-                        covered = covered[1:i]
+                        resize!(curBranch, i)
+                        resize!(covered, i)
                         # @info "Pruning $difLevel levels from level $(length(curBranch)) via automorphism."
                         return difLevel
                     end
@@ -385,4 +385,8 @@ function label(F::T; prune=true, removeIsolated=false) where {T<:Model}
     # p = Int[findfirst(x -> x == i, vStar) for i in 1:n]
     # @assert p == p2
     return permute(F, p), permute!(autG, p), p
+end
+
+function canonical(F::T; kwargs...) where {T<:Model}
+    return label(F; kwargs...)[1]
 end
