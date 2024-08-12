@@ -10,5 +10,5 @@ Documentation for [GenericNauty](https://github.com/DanielBrosch/GenericNauty.jl
 ```
 
 ```@autodocs
-Modules = [GenericNauty]
+Modules = [GenericNauty, GenericNauty.Models]
 ```
