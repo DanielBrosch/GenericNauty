@@ -12,7 +12,21 @@ function distinguish(G::T, v::Int, W::BitVector)::UInt where {T<:Model}
     return UInt(0)
 end
 
-function vertexColor(G::T, v) where {T<:Model}
-    error("vertexColor not implemented for $T.")
+"""
+    vertexColor(G::T, v)::Int where {T<:Model}
+
+The initial color of a vertex `v` of `G`, used for the initial coloring of the labeling algorithm. Defaults to `1`.
+"""
+function vertexColor(G::T, v)::Int where {T<:Model}
     return 1
+end
+
+"""
+    extend(G::T)::Vector{T} where {T<:Model}
+
+Adds one vertex in all possible ways to `G`, potentially including multiple isomorphic copies of a model.
+"""
+function extend(G::T)::Vector{T} where {T<:Model}
+    error("extend not implemented for $T.")
+    return T[]
 end

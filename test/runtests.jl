@@ -16,6 +16,9 @@ using Documenter
         include("labelTests.jl")
         include("labelRandom.jl")
     end
+    @testset "Generate" begin
+        include("generateGraphs.jl")
+    end
 
     @testset "Doctests" begin
         doctest(GenericNauty)
